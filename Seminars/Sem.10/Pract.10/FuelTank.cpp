@@ -39,3 +39,13 @@ void FuelTank::fill(double amount)
 	else
 		_currentLevel += amount;
 }
+
+double FuelTank::getCapacity() const
+{
+	return _capacity;
+}
+
+double FuelTank::getCurrentLevel() const
+{
+	return _currentLevel;
+}

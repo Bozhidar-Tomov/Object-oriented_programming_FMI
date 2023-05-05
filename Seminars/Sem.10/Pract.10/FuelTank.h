@@ -10,4 +10,7 @@ public:
 
 	void use(double);
 	void fill(double);
+
+	double getCapacity() const;
+	double getCurrentLevel() const;
 };

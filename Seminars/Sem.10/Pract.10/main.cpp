@@ -33,14 +33,14 @@ int main()
         Car car2(&engine, tires, &carBattery, 250, 0, 1700);
 
         car1.drive(5);
-        std::cout << car1;
 
         Car *winner = dragRace(&car1, &car2);
 
         if (!winner)
             std::cout << "No winner\n";
         else
-            std::cout << *winner;
+            std::cout << "Winner: " << *winner
+                      << "Fuel left: " << winner->getFuelTank().getCurrentLevel() << " liters.\n";
     }
     catch (std::exception &exc)
     {

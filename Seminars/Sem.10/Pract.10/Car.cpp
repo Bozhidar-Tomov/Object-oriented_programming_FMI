@@ -45,47 +45,23 @@ void Car::drive(double km)
     _distanceTraveled += km;
 }
 
-// Car *dragRace(Car *car1, Car *car2)
-// {
-//     static const double RACE_DISTANCE = 0.4;
-//     Car *winner = nullptr;
+/*
+Reasons I used a higher order function here, although it is not necessary:
+1) To practice this concept
+2) Not to repeat the code, handling errors (D.R.Y.)
+*/
 
-//     try
-//     {
-//         // Use fuel for both cars
-//         car1->_fuelTank.use(RACE_DISTANCE);
-//         car2->_fuelTank.use(RACE_DISTANCE);
-
-//         // Determine the winner based on weight-to-horsepower ratio
-//         winner = (car1->_weight / car1->_engine->getHorsePowers() > car2->_weight / car2->_engine->getHorsePowers()) ? car1 : car2;
-//     }
-//     catch (insufficient_fuel_exception &exc)
-//     { // If one car runs out of fuel, return the other car as the winner
-//         // If both cars run out of fuel, return nullptr
-//         winner = (exc.getCar() == car1) ? car2 : ((exc.getCar() == car2) ? car1 : nullptr);
-//     }
-//     catch (std::exception &exc)
-//     {
-//         std::cout << "Exception occurred: " << exc.what() << '\n'
-//                   << "Unsuccessful race.";
-//         return nullptr;
-//     }
-//     catch (...)
-//     {
-//         std::cout << "Unknown error. Unsuccessful race.";
-//         return nullptr;
-//     }
-
-//     return winner;
-// }
-
-static inline bool isFuelSufficient(FuelTank *tank, void (FuelTank::*useFuel)(double))
+// We take a pointer to a Car method and Car object on which to call the method
+static inline bool isFuelSufficient(Car *car, void (Car::*drive)(double))
 {
     static const double RACE_DISTANCE = 0.4;
 
     try
     {
-        (tank->*useFuel)(RACE_DISTANCE);
+        // car is pointer, so we have to dereference it, *drive is function pointer, so we have to dereference *drive aas well
+        // That is why we have   car->*drive   or   (*car).*drive   syntax.
+        //                      ‾‾‾‾‾‾‾‾‾‾‾‾‾      ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+        (car->*drive)(RACE_DISTANCE);
     }
     catch (insufficient_fuel_exception &exc)
     {
@@ -108,8 +84,9 @@ static inline bool isFuelSufficient(FuelTank *tank, void (FuelTank::*useFuel)(do
 
 Car *dragRace(Car *car1, Car *car2)
 {
-    static bool sufficientFuelCar1 = isFuelSufficient(&(car1->_fuelTank), &FuelTank::use);
-    static bool sufficientFuelCar2 = isFuelSufficient(&(car2->_fuelTank), &FuelTank::use);
+    // Passing the pointer to Car obj and the address of Car::drive function
+    static bool sufficientFuelCar1 = isFuelSufficient(car1, &Car::drive);
+    static bool sufficientFuelCar2 = isFuelSufficient(car2, &Car::drive);
 
     if (sufficientFuelCar1 && sufficientFuelCar2)
     {
