@@ -1,4 +1,5 @@
 #pragma once
+#include <ostream>
 #include "FuelTank.h"
 #include "Engine.h"
 #include "Tire.h"
@@ -6,27 +7,20 @@
 
 class Car
 {
-    Engine *engine = nullptr;
-    Tire *tires[4];
-    CarBattery *carBattery = nullptr;
-    FuelTank fuelTank;
+    FuelTank _fuelTank;
+    Engine *_engine = nullptr;
+    Tire *_tires[4];
+    CarBattery *_carBattery = nullptr;
 
-    unsigned distanceTraveled = 0;
-    unsigned weight = 0;
+    unsigned _distanceTraveled = 0;
+    unsigned _weight = 0;
 
 public:
-    Car(
-        unsigned int, const char *, const char *,
-        unsigned short,
-        unsigned short, unsigned short, unsigned short,
-        unsigned int, char *,
-        double,
-
-        unsigned = 0,
-        unsigned = 0);
+    Car(Engine *, Tire *[4], CarBattery *, double, unsigned int, unsigned int);
 
     const FuelTank &getFuelTank() const;
     void drive(double);
 
-    friend Car *dragRace(Car *car1, Car *car2);
+    friend Car *dragRace(Car *, Car *);
+    friend std::ostream &operator<<(std::ostream &, const Car &);
 };

@@ -1,13 +1,13 @@
-#include "FuelTank.h"
 #include <stdexcept>
+#include "FuelTank.h"
 #include "insufficient_fuel_exception.h"
 
-bool static getAbs(double a)
+bool static inline getAbs(double a)
 {
 	return a < 0 ? -a : a;
 }
 
-bool static areEqual(double a, double b)
+bool static inline areEqual(double a, double b)
 {
 	static const double EPSILON = 0.0001;
 	return getAbs(a - b) < EPSILON;

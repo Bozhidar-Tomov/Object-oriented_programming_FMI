@@ -1,15 +1,15 @@
 #pragma once
-#include "CarPart.h"
 #include <ostream>
+#include "CarPart.h"
 
 class Engine : CarPart
 {
 	unsigned int _horsePowers = 0;
 
 public:
-	Engine(unsigned int ID, const char *manufacturer, const char *description, unsigned short horsePowers);
+	Engine(unsigned int, const char *, const char *, unsigned short);
 
 	unsigned int getHorsePowers() const;
 
-	friend std::ostream &operator<<(std::ostream &out, const Engine &obj);
+	friend std::ostream &operator<<(std::ostream &, const Engine &);
 };

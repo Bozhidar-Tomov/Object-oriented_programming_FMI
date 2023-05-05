@@ -2,16 +2,14 @@
 #include <cstring>
 #include "CarBattery.h"
 
-CarBattery::CarBattery(unsigned int ID, const char *manufacturer, const char *description, unsigned int capacity, char *batteryID) : CarPart(ID, manufacturer, description)
+CarBattery::CarBattery(unsigned int ID, const char *manufacturer, const char *description, unsigned int capacity, const char *batteryID) : CarPart(ID, manufacturer, description)
 {
 	if (!batteryID)
-	{
 		throw std::invalid_argument("Invalid input data. Nullptr provided.");
-	}
 
 	_capacity = capacity;
 
-	_batteryID = new char[strlen(batteryID + 1)];
+	_batteryID = new char[strlen(batteryID) + 1];
 	strcpy(_batteryID, batteryID);
 }
 
@@ -41,9 +39,7 @@ void CarBattery::copyFrom(const CarBattery &other)
 void CarBattery::copyBatteryID(const char *batteryID)
 {
 	if (!batteryID)
-	{
 		throw std::invalid_argument("Invalid input data. Nullptr provided.");
-	}
 
 	_batteryID = new char[strlen(batteryID + 1)];
 	strcpy(_batteryID, batteryID);
@@ -52,12 +48,13 @@ void CarBattery::copyBatteryID(const char *batteryID)
 void CarBattery::free()
 {
 	delete[] _batteryID;
+	_batteryID = nullptr;
 }
 
 std::ostream &operator<<(std::ostream &out, const CarBattery &obj)
 {
 	return out << (const CarPart &)obj << " - "
-			   << "Battery ID " << obj._batteryID << " - " << obj._capacity << "Ah";
+			   << "Battery ID " << obj._batteryID << " - " << obj._capacity << " Ah";
 }
 
 CarBattery::~CarBattery()

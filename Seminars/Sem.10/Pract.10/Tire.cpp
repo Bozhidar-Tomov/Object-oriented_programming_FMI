@@ -5,9 +5,8 @@ Tire::Tire(unsigned int ID, const char *manufacturer, const char *description, u
 {
 
 	if (!(isWidthValid(width) && isProfileValid(profile) && isDiameterValid(diameter)))
-	{
 		throw std::invalid_argument("Invalid input data.");
-	}
+
 	_width = width;
 	_profile = profile;
 	_diameter = diameter;
@@ -28,7 +27,7 @@ inline bool Tire::isDiameterValid(unsigned int diameter)
 	return (diameter >= 13 && diameter <= 21);
 }
 
-inline std::ostream &operator<<(std::ostream &out, const Tire &obj)
+std::ostream &operator<<(std::ostream &out, const Tire &obj)
 {
 	return out << (const CarPart &)obj << " - "
 			   << obj._width << "/" << obj._profile << "R" << obj._diameter;

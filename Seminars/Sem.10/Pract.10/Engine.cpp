@@ -13,5 +13,5 @@ unsigned int Engine::getHorsePowers() const
 std::ostream &operator<<(std::ostream &out, const Engine &obj)
 {
 	return out << (const CarPart &)obj << " - "
-			   << obj._horsePowers << "hp";
+			   << obj._horsePowers << " hp";
 }

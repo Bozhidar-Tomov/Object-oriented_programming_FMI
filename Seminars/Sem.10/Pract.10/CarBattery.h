@@ -4,20 +4,20 @@
 
 class CarBattery : CarPart
 {
-	unsigned int _capacity = 0;
 	char *_batteryID = nullptr;
+	unsigned int _capacity = 0;
 
 public:
-	CarBattery(unsigned int ID, const char *manufacturer, const char *description,
-			   unsigned int capacity, char *batteryID);
-	CarBattery(const CarBattery &other);
-	CarBattery &operator=(const CarBattery &other);
+	CarBattery(unsigned int, const char *, const char *,
+			   unsigned int, const char *);
+	CarBattery(const CarBattery &);
+	CarBattery &operator=(const CarBattery &);
 	~CarBattery();
 
-	friend std::ostream &operator<<(std::ostream &out, const CarBattery &obj);
+	friend std::ostream &operator<<(std::ostream &, const CarBattery &);
 
 private:
-	void copyFrom(const CarBattery &other);
-	void copyBatteryID(const char *batteryID);
+	void copyFrom(const CarBattery &);
+	void copyBatteryID(const char *);
 	void free();
 };

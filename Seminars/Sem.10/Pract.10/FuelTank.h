@@ -1,4 +1,5 @@
 #pragma once
+
 class FuelTank
 {
 	double _capacity = 0;
@@ -7,6 +8,6 @@ class FuelTank
 public:
 	FuelTank(double);
 
-	void use(double amount);
-	void fill(double amount);
+	void use(double);
+	void fill(double);
 };
