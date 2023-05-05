@@ -5,6 +5,11 @@ Engine::Engine(unsigned int ID, const char *manufacturer, const char *descriptio
 	_horsePowers = horsePowers;
 }
 
+unsigned int Engine::getHorsePowers() const
+{
+	return _horsePowers;
+}
+
 std::ostream &operator<<(std::ostream &out, const Engine &obj)
 {
 	return out << (const CarPart &)obj << " - "

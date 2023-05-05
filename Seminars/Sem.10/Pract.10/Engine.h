@@ -9,5 +9,7 @@ class Engine : CarPart
 public:
 	Engine(unsigned int ID, const char *manufacturer, const char *description, unsigned short horsePowers);
 
+	unsigned int getHorsePowers() const;
+
 	friend std::ostream &operator<<(std::ostream &out, const Engine &obj);
 };
