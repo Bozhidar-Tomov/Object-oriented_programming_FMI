@@ -29,17 +29,18 @@ int main()
         CarBattery carBattery(ID, manufacturer, description, 24000, BatteryID);
 
         // build the car
-        Car car1(&engine, tires, &carBattery, 50, 0, 1650);
-        Car car2(&engine, tires, &carBattery, 250, 0, 1700);
+        Car car1(&engine, tires, &carBattery, 5, 0, 1650);
+        Car car2(&engine, tires, &carBattery, 4, 0, 1700);
 
-        car1.drive(5);
+        car2.drive(3);
 
         Car *winner = dragRace(&car1, &car2);
 
         if (!winner)
             std::cout << "No winner\n";
         else
-            std::cout << "Winner: " << *winner
+            std::cout << "Winner car: \n"
+                      << *winner
                       << "Fuel left: " << winner->getFuelTank().getCurrentLevel() << " liters.\n";
     }
     catch (std::exception &exc)

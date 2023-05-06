@@ -12,14 +12,14 @@ class Car
     Tire *_tires[4];
     CarBattery *_carBattery = nullptr;
 
-    unsigned _distanceTraveled = 0;
-    unsigned _weight = 0;
+    double _distanceTraveled = 0;
+    unsigned int _weight = 0;
 
 public:
-    Car(Engine *, Tire *[4], CarBattery *, double, unsigned int, unsigned int);
+    Car(Engine *, Tire *[4], CarBattery *, double, double, unsigned int);
 
     const FuelTank &getFuelTank() const;
-    void drive(double);
+    bool drive(double);
 
     friend Car *dragRace(Car *, Car *);
     friend std::ostream &operator<<(std::ostream &, const Car &);
