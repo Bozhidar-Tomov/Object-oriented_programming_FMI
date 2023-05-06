@@ -4,18 +4,21 @@
 // Big 4
 MyString::MyString() : MyString(nullptr) {}
 
-MyString::MyString(const char *data) : _data(new char[DEFAULT_CAPACITY]{'\0'}), _capacity(DEFAULT_CAPACITY)
+MyString::MyString(const char *data)
 {
     if (!data)
     {
+        _data = new char[_capacity];
         return;
     }
 
-    int size = myStrLen(data);
-
-    manageCapacity(size, false);
-    myStrCpy(_data, data);
+    size_t size = myStrLen(data);
     _size = size;
+
+    manageCapacity(size, false, false);
+
+    _data = new char[_capacity];
+    myStrCpy(_data, data);
 }
 
 MyString::MyString(const MyString &other)
@@ -45,7 +48,7 @@ char *MyString::operator*() const
 }
 
 // Big 4 helper functions
-void MyString::manageCapacity(int size, bool shouldCopy)
+void MyString::manageCapacity(size_t size, bool shouldCopy, bool shouldResize)
 {
     if (size >= _capacity)
     {
@@ -53,7 +56,8 @@ void MyString::manageCapacity(int size, bool shouldCopy)
         {
             _capacity <<= 1;
         }
-        resizeUtil(_data, _capacity, shouldCopy);
+        if (shouldResize)
+            resizeUtil(_data, _capacity, shouldCopy);
     }
 }
 
@@ -80,51 +84,41 @@ void MyString::copyData(const char *data)
 }
 
 // Capacity:
-int MyString::size() const
+size_t MyString::size() const
 {
     return _size;
 }
 
-int MyString::length() const
+size_t MyString::length() const
 {
     return _size;
 }
 
-void MyString::resize(int len, char ch)
+void MyString::resize(size_t len, char ch)
 {
-    if (len <= 0)
+    if (len < _size)
     {
-        throw "Out of Range Exception";
+        _size = len;
+        _data[_size] = '\0';
     }
-
-    if (len > _size)
+    else if (len > _size)
     {
-        int oldSize = _size;
-
-        for (int i = 0; i < len - oldSize; ++i)
+        reserve(len);
+        for (size_t i = _size; i < len; ++i)
         {
-            push_back(ch);
+            _data[i] = ch;
         }
-        return;
+        _size = len;
+        _data[_size] = '\0';
     }
-
-    if (len == _size)
-    {
-        return;
-    }
-
-    MyString temp;
-    temp.append(substr(0, len));
-
-    *this = temp;
 }
 
-int MyString::capacity() const
+size_t MyString::capacity() const
 {
     return _capacity;
 }
 
-void MyString::reserve(int len)
+void MyString::reserve(size_t len)
 {
     if (len <= _size)
     {
@@ -160,30 +154,30 @@ void MyString::shrink_to_fit()
 }
 
 // Element access:
-char &MyString::operator[](int idx)
+char &MyString::operator[](size_t idx)
 {
     return _data[idx];
 }
 
-const char &MyString::operator[](int idx) const
+const char &MyString::operator[](size_t idx) const
 {
     return _data[idx];
 }
 
-char &MyString::at(int idx)
+char &MyString::at(size_t idx)
 {
     if (idx < 0 || idx > _size)
     {
-        throw "Index Out Of Bound Exception";
+        throw std::out_of_range("Index out of range.");
     }
     return _data[idx];
 }
 
-const char &MyString::at(int idx) const
+const char &MyString::at(size_t idx) const
 {
     if (idx < 0 || idx > _size)
     {
-        throw "Index Out Of Bound Exception";
+        throw std::out_of_range("Index out of range.");
     }
     return _data[idx];
 }
@@ -192,7 +186,7 @@ char &MyString::front()
 {
     if (!_size)
     {
-        throw "Empty String Exception";
+        throw std::invalid_argument("Empty String Exception (nullptr).");
     }
 
     return _data[0];
@@ -202,7 +196,7 @@ const char &MyString::front() const
 {
     if (!_size)
     {
-        throw "Empty String Exception";
+        throw std::invalid_argument("Empty String Exception (nullptr).");
     }
 
     return _data[0];
@@ -212,7 +206,7 @@ char &MyString::back()
 {
     if (!_size)
     {
-        throw "Empty String Exception";
+        throw std::invalid_argument("Empty String Exception (nullptr).");
     }
 
     return _data[_size - 1];
@@ -222,7 +216,7 @@ const char &MyString::back() const
 {
     if (!_size)
     {
-        throw "Empty String Exception";
+        throw std::invalid_argument("Empty String Exception (nullptr).");
     }
 
     return _data[_size - 1];
@@ -249,7 +243,7 @@ MyString &MyString::append(const char *data)
 {
     if (data && data[0] != '\0')
     {
-        int size = myStrLen(data);
+        size_t size = myStrLen(data);
 
         manageCapacity(_size + size, true);
         myStrCpy(_data, data, _size);
@@ -265,7 +259,7 @@ void MyString::push_back(char ch)
     _data[_size] = '\0';
 }
 
-MyString &MyString::replace(int start, int len, const MyString &other)
+MyString &MyString::replace(size_t start, size_t len, const MyString &other)
 {
     MyString temp = substr(0, start);
     temp.append(other);
@@ -276,11 +270,11 @@ MyString &MyString::replace(int start, int len, const MyString &other)
     return *this;
 }
 
-MyString &MyString::replace(int start, int len, int count, char ch)
+MyString &MyString::replace(size_t start, size_t len, size_t count, char ch)
 {
     MyString temp = substr(0, start);
 
-    for (int i = 0; i < count; ++i)
+    for (size_t i = 0; i < count; ++i)
     {
         temp.push_back(ch);
     }
@@ -295,8 +289,8 @@ MyString &MyString::replace(int start, int len, int count, char ch)
 void MyString::swap(MyString &other)
 {
     char *tempData = _data;
-    int tempSize = _size;
-    int tempCapacity = _capacity;
+    size_t tempSize = _size;
+    size_t tempCapacity = _capacity;
 
     _data = other._data;
     _size = other._size;
@@ -321,14 +315,9 @@ const char *MyString::c_str() const
     return _data;
 }
 
-int MyString::find_first_of(char ch, int pos) const
+size_t MyString::find_first_of(char ch, size_t pos) const
 {
-    if (pos < 0)
-    {
-        throw "Out Of Range Exception";
-    }
-
-    for (int i = pos; i < _size; ++i)
+    for (size_t i = pos; i < _size; ++i)
     {
         if (_data[i] == ch)
         {
@@ -339,19 +328,14 @@ int MyString::find_first_of(char ch, int pos) const
     return -1;
 }
 
-int MyString::find_last_of(char ch, int pos) const
+size_t MyString::find_last_of(char ch, size_t pos) const
 {
-    if (pos < 0)
-    {
-        throw "Out Of Range Exception";
-    }
-
-    if (pos == INT_MAX)
+    if (pos == SIZE_MAX)
     {
         pos = _size - 1;
     }
 
-    for (int i = pos; i >= 0; --i)
+    for (size_t i = pos; i >= 0; --i)
     {
         if (_data[i] == ch)
         {
@@ -361,11 +345,11 @@ int MyString::find_last_of(char ch, int pos) const
     return -1;
 }
 
-MyString MyString::substr(int start, int len) const
+MyString MyString::substr(size_t start, size_t len) const
 {
-    if (start < 0 || start > _size || len <= 0)
+    if (start > _size || len == 0)
     {
-        throw "Out Of Range Exception";
+        throw std::invalid_argument("Indexes out of range.");
     }
 
     if (start == _size)
@@ -376,7 +360,7 @@ MyString MyString::substr(int start, int len) const
     MyString temp;
     temp.reserve(len);
 
-    for (int i = 0; i < len; ++i)
+    for (size_t i = 0; i < len; ++i)
     {
         if (start + i > _size)
         {
@@ -388,16 +372,16 @@ MyString MyString::substr(int start, int len) const
     return temp;
 }
 
-int MyString::compare(const MyString &other) const
+size_t MyString::compare(const MyString &other) const
 {
     return compare(other._data);
 }
 
-int MyString::compare(const char *data) const
+size_t MyString::compare(const char *data) const
 {
     if (!data)
     {
-        throw "nullptr exception";
+        throw std::invalid_argument("Empty String Exception (nullptr).");
     }
     return myStrCmp(_data, data);
 }
@@ -408,9 +392,9 @@ std::ostream &operator<<(std::ostream &out, const MyString &obj)
     return out << obj._data;
 }
 
-std::istream &operator>>(std::istream &in, const MyString &obj)
+static inline bool isSpace(int n)
 {
-    return in >> obj._data;
+    return n == 32; // ' ' character is 32
 }
 
 MyString operator+(const MyString &lhs, const MyString &rhs)

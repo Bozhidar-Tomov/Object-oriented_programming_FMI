@@ -1,15 +1,13 @@
 #include <iostream>
 
-void myStrCpy(char *destination, const char *source, int startIdx)
+void myStrCpy(char *destination, const char *source, size_t startIdx)
 {
     if (!destination || !source)
-    {
         return;
-    }
 
-    int idx = 0;
+    size_t idx = 0;
 
-    while (source[idx] != '\0')
+    while (source[idx])
     {
         destination[startIdx] = source[idx];
         ++startIdx;

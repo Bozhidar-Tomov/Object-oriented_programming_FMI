@@ -3,9 +3,19 @@
 
 int main()
 {
-    MyString str = "1234";
+    try
+    {
+        MyString str = "1234";
+        str.resize(16, 'r');
 
-    str.resize(20);
-
-    std::cout << str;
+        std::cout << str;
+    }
+    catch (std::exception &exc)
+    {
+        std::cout << exc.what();
+    }
+    catch (...)
+    {
+        std::cout << "Unknown error.";
+    }
 }
