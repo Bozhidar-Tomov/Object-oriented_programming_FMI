@@ -4,36 +4,51 @@
 
 class MyString {
 private:
-	char* _data;
-	size_t _length;
+	static const short SSO_MAX_SIZE = sizeof(char*) + sizeof(size_t) - 1;
 
-	void copyFrom(const MyString& data);
+	union
+	{
+		struct
+		{
+			char* _data;
+			size_t _size;
+		};
+		char ssoData[MyString::SSO_MAX_SIZE + 1] = "\0";
+	};
+
+	bool isSso() const;
+	void move(MyString&& other);
+	void copyFrom(const MyString& other);
 	void free();
 
-	explicit MyString(size_t capacity); //for memory allocation. How much bytes to allocate
+	explicit MyString(size_t size);
+
+	void notUsingSso();
 public:
 
 	MyString();
 	MyString(const char* data);
+
 	MyString(const MyString& other);
 	MyString& operator=(const MyString& other);
-	~MyString();
 
-	size_t length() const;
+	MyString(MyString&& other) noexcept;
+	MyString& operator=(MyString&& other) noexcept;
+
 	MyString& operator+=(const MyString& other);
 
-	MyString substr(size_t begin, size_t howMany) const;
+	const char* c_str() const;
+	size_t length() const;
 
 	char& operator[](size_t index);
 	char operator[](size_t index) const;
-	
-	const char* c_str() const;
+
+	~MyString();
 
 	friend MyString operator+(const MyString& lhs, const MyString& rhs);
-	friend std::istream& operator>>(std::istream& is, MyString& str);
 };
 
-std::ostream& operator<<(std::ostream& os, const MyString& str);
+std::ostream& operator<<(std::ostream& os, const MyString& obj);
 
 bool operator<(const MyString& lhs, const MyString& rhs);
 bool operator<=(const MyString& lhs, const MyString& rhs);
