@@ -32,7 +32,7 @@ void Form::appendControl(Control &control)
     _controls.push_back(control);
 }
 
-void Form::appendControl(Control &&control) noexcept
+void Form::appendControl(Control &&control)
 {
     _controls.push_back(std::move(control));
 }

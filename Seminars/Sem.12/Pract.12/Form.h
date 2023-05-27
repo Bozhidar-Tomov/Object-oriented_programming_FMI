@@ -21,13 +21,11 @@ public:
 
 	void appendControl(ControlType);
 	void appendControl(Control &);
-	void appendControl(Control &&) noexcept;
+	void appendControl(Control &&);
 
 	void changeSize(size_t, size_t);
 	const Control &getControl(size_t) const;
 	Control &getControl(size_t);
-
-	void change(size_t);
 
 	void popControl();
 };
